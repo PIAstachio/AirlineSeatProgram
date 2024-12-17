@@ -1,0 +1,178 @@
+#include <iostream>
+#include <string>
+#include <vector>
+
+using namespace std;
+
+void DisplayMenu(){
+   cout << "Menu options:" << endl;
+   cout << "1. Display All Seats Status:" << endl;
+   cout << "2. Total Number of Available Seats:" << endl;
+   cout << "3. Display Available Seats: " << endl;
+   cout << "4. Book Seat:" << endl;
+   cout << "5. Cancel Seat:" << endl;
+   cout << "6. Change Seat:" << endl;
+   cout << "7. Quit:" << endl << endl;
+   cout << "Please select an option: " << endl;
+}
+
+void DisplayAllSeatsStatus(const vector<string> &seats, const vector<bool> &seatStatus){
+   long unsigned int i;
+   cout << "Seat\tStatus" << endl;
+   for (i = 0; i < seats.size(); ++i){
+      cout << seats[i] << "\t" << seatStatus[i] << endl;
+   }
+   cout << endl;
+}
+
+void DisplayAvailableSeats(const vector<string> &seats, const vector<bool> &seatStatus){
+   long unsigned int i;
+   cout << "Available seats:" << endl;
+   for (i = 0; i < seats.size(); ++i){
+      if (seatStatus[i] == 0){
+         cout << seats[i] << endl;
+      }
+   }
+}
+
+int TotalNumberOfAvailableSeats(const vector<bool> &seatStatus){
+   int total = 0;
+   long unsigned int i;
+   for(i = 0; i < seatStatus.size(); ++i){
+      if(seatStatus[i] == 0){
+         total += 1;
+      }
+   }
+   return total;
+}
+
+void BookSeat(const string &seatToBook, const vector<string> &seats, vector<bool> &seatStatus){
+   string inputSeat = seatToBook;
+   bool bookingComplete = false;
+   
+   while (!bookingComplete){
+      for (long unsigned int i = 0; i < seats.size(); ++i){
+         if(seats[i] == inputSeat){
+            if (seatStatus[i] == 0){
+               seatStatus[i] = 1;
+               DisplayAllSeatsStatus (seats, seatStatus);
+               return;
+            }
+            else{
+               cout << "That seat is already taken." << endl;
+               cout << "Enter seat to book: " << endl;
+               cin >> inputSeat;
+               cout << endl;
+            }
+         }
+      }
+   }  
+}
+
+void CancelSeat (const string &seatToCancel, const vector<string> &seats, vector<bool> &seatStatus){
+   long unsigned int i;
+   for (i = 0; i < seats.size(); ++i){
+      if(seats[i] == seatToCancel){
+         seatStatus[i] = 0;
+         DisplayAllSeatsStatus (seats, seatStatus);
+         return;
+      }
+   }
+}
+
+void ChangeSeat(const string &seatToCancel, const string &seatToBook, const vector<string> &seats, vector<bool> &seatStatus){
+   long unsigned int i;
+   for (i = 0; i < seats.size(); ++i){
+      if (seats[i] == seatToCancel){
+         seatStatus[i] = 0;
+      }
+      if (seats[i] == seatToBook){
+         if (seatStatus[i] == 1){
+            cout << "That seat is already taken." << endl;
+            return;
+         }
+         else {
+            seatStatus[i] = 1;
+         }
+      }
+   }
+   
+   DisplayAllSeatsStatus (seats, seatStatus);
+}
+
+int main(){
+   
+   int option;
+   
+   vector<string> seats;
+   vector<bool> seatStatus;
+   for(int i = 1; i < 6; ++i){
+      for(char p = 'A'; p < 'F'; ++p){
+         seats.push_back(to_string(i) + p);
+         seatStatus.push_back(0);
+      }
+   }
+   
+   DisplayMenu();
+   cin >> option;
+   cout << endl;
+
+   while (option != 7){
+      if (option == 1) {
+         DisplayAllSeatsStatus(seats, seatStatus);
+      }
+      
+      else if (option == 2){
+         cout << "Number of available seats: " << TotalNumberOfAvailableSeats(seatStatus);
+         cout << endl << endl;
+      }
+      
+      else if (option == 3){
+         DisplayAvailableSeats(seats, seatStatus);
+         cout << endl;
+      }
+      
+      else if (option == 4){
+         string seatToBook;
+         
+         cout << "Enter seat to book: " << endl;
+         cin >> seatToBook;
+         cout << endl;
+         BookSeat(seatToBook, seats, seatStatus);
+      }
+      
+      else if (option == 5){
+         string seatToCancel;
+         
+         cout << "Enter seat to cancel: " << endl;
+         cin >> seatToCancel;
+         cout << endl;
+         
+         CancelSeat(seatToCancel, seats, seatStatus);
+      }
+      
+      else if (option == 6){
+         string seatToCancel;
+         string seatToBook;
+         
+         cout << "Enter seat to cancel: " << endl;
+         cin >> seatToCancel;
+         cout << endl;
+         cout << "Enter seat to book: " << endl;
+         cin >> seatToBook;
+         cout << endl;
+         ChangeSeat(seatToCancel, seatToBook, seats, seatStatus);
+      }
+      
+      else {
+         cout << "Invalid option. Please try again." << endl << endl;
+      }
+      
+      DisplayMenu();
+      
+      cin >> option;
+      cout << endl;
+   }
+   
+   return 0;
+}
