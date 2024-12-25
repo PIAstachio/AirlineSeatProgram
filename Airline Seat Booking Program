@@ -20,7 +20,7 @@ void DisplayAllSeatsStatus(const vector<string> &seats, const vector<bool> &seat
    long unsigned int i;
    cout << "Seat\tStatus" << endl;
    for (i = 0; i < seats.size(); ++i){
-      cout << seats[i] << "\t" << seatStatus[i] << endl;
+      cout << seats.at(i) << "\t" << seatStatus[i] << endl;
    }
    cout << endl;
 }
@@ -29,8 +29,8 @@ void DisplayAvailableSeats(const vector<string> &seats, const vector<bool> &seat
    long unsigned int i;
    cout << "Available seats:" << endl;
    for (i = 0; i < seats.size(); ++i){
-      if (seatStatus[i] == 0){
-         cout << seats[i] << endl;
+      if (seatStatus.at(i) == 0){
+         cout << seats.at(i) << endl;
       }
    }
 }
@@ -39,7 +39,7 @@ int TotalNumberOfAvailableSeats(const vector<bool> &seatStatus){
    int total = 0;
    long unsigned int i;
    for(i = 0; i < seatStatus.size(); ++i){
-      if(seatStatus[i] == 0){
+      if(seatStatus.at(i) == 0){
          total += 1;
       }
    }
@@ -52,9 +52,9 @@ void BookSeat(const string &seatToBook, const vector<string> &seats, vector<bool
    
    while (!bookingComplete){
       for (long unsigned int i = 0; i < seats.size(); ++i){
-         if(seats[i] == inputSeat){
-            if (seatStatus[i] == 0){
-               seatStatus[i] = 1;
+         if(seats.at(i) == inputSeat){
+            if (seatStatus.at(i) == 0){
+               seatStatus.at(i) = 1;
                DisplayAllSeatsStatus (seats, seatStatus);
                return;
             }
@@ -72,8 +72,8 @@ void BookSeat(const string &seatToBook, const vector<string> &seats, vector<bool
 void CancelSeat (const string &seatToCancel, const vector<string> &seats, vector<bool> &seatStatus){
    long unsigned int i;
    for (i = 0; i < seats.size(); ++i){
-      if(seats[i] == seatToCancel){
-         seatStatus[i] = 0;
+      if(seats.at(i) == seatToCancel){
+         seatStatus.at(i) = 0;
          DisplayAllSeatsStatus (seats, seatStatus);
          return;
       }
@@ -83,16 +83,16 @@ void CancelSeat (const string &seatToCancel, const vector<string> &seats, vector
 void ChangeSeat(const string &seatToCancel, const string &seatToBook, const vector<string> &seats, vector<bool> &seatStatus){
    long unsigned int i;
    for (i = 0; i < seats.size(); ++i){
-      if (seats[i] == seatToCancel){
-         seatStatus[i] = 0;
+      if (seats.at(i) == seatToCancel){
+         seatStatus.at(i) = 0;
       }
       if (seats[i] == seatToBook){
-         if (seatStatus[i] == 1){
+         if (seatStatus.at(i) == 1){
             cout << "That seat is already taken." << endl;
             return;
          }
          else {
-            seatStatus[i] = 1;
+            seatStatus.at(i) = 1;
          }
       }
    }
@@ -162,10 +162,6 @@ int main(){
          cin >> seatToBook;
          cout << endl;
          ChangeSeat(seatToCancel, seatToBook, seats, seatStatus);
-      }
-      
-      else {
-         cout << "Invalid option. Please try again." << endl << endl;
       }
       
       DisplayMenu();
